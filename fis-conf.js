@@ -1,4 +1,4 @@
-//一、再也不用手工维护了，这些工作可以自动化维护
+//一、自动化维护，减少了手工维护的成本和风险
 
 	//开启simple插件，注意需要先进行插件安装 npm install -g fis-postpackager-simple
 	//对js打包后，默认不更新页面的资源引用，开启后，打包后会自动更新资源的url;
@@ -7,34 +7,33 @@
 	//资源的合并 fis release -p
 	//产出目录 fis release -d [path]
 	fis.config.set('pack', {
-	    '/pkg/lib.js': [
-	        'js/lib/jquery.js',
-	        'js/lib/underscore.js',
-	        'js/lib/backbone.js',
-	        'js/lib/backbone.localStorage.js',
-	    ],
-	    //不仅仅合并css，还可以合并css;
-	    '/pkg/aio.css': '**.css'
+	    // '/pkg/main.js': [
+	    //     'js/lib/jquery.js',
+	    //     'js/lib/underscore.js',
+	    //     'js/lib/backbone.js',
+	    //     'js/lib/backbone.localStorage.js'
+	    // ],//指定js的合并方式
+	    //打包css的同时还生成雪碧图;
+	    '/pkg/main.css': '**.css'//指定css的合并方式
 	});
 
 	//设置图片合并的最小间隔
 	fis.config.set('settings.spriter.csssprites.margin', 20);
-
 	// 零散资源的自动合并
-	fis.config.set('settings.postpackager.simple.autoCombine', true);
+	fis.config.set('settings.postpackager.simple.autoCombine', true);//按页面顺序自动压缩
 
 	//资源的部署,fis release -D(domain) -d(产出) -m(md5) (-Ddm) output
 	//部署资源面临两个情况，一个是域的改变，另一个是路径的改变
-		//域
+		//改变内容的域名
 		fis.config.set("roadmap.domain", "http://static.baidu.com");
-		//路径
+		//改变资源的文件夹路径
 		fis.config.set("roadmap.path", [{
 		    // reg: /^\/static\/a\.css$/,
 		    reg: /^\/css\/(.+?)\.css$/,
 		    release: '/static/release/css/$1.css' //配置产出路径
 		},{
 			reg: /^\/js\/(.+?)\.js$/,
-			release: '/static/release/$1.js'
+			release: '/static/release/js/$1.js'
 		}]);
 	//页面不再需要手动引入样式和脚本资源，只需要引入一个mod库即可
 	//我们就实现了模块化资源的自动加载以及完全脱离后端的资源管理能力
